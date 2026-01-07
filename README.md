@@ -1,50 +1,113 @@
-# Welcome to your Expo app 👋
+# Zona Azul - App Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo mobile para gestão de estacionamento rotativo (Zona Azul).
 
-## Get started
+## 🚀 Configuração
 
-1. Install dependencies
+### Pré-requisitos
 
-   ```bash
-   npm install
-   ```
+- Node.js 18+ 
+- npm ou yarn
+- Expo CLI
+- Backend rodando (veja `/backend`)
 
-2. Start the app
+### Instalação
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Instale as dependências:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Configure a URL da API no arquivo `src/constants/config.ts`:
 
-## Learn more
+```typescript
+export const API_BASE_URL = __DEV__
+  ? 'http://SEU_IP_LOCAL:3000/api/v1'  // Para desenvolvimento (substitua SEU_IP_LOCAL pelo seu IP)
+  : 'https://api.zonazul.com/api/v1';  // Para produção
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+**Importante**: Para desenvolvimento, você precisará usar o IP da sua máquina local, não `localhost`, pois o dispositivo/emulador precisa acessar a API.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. Inicie o servidor de desenvolvimento:
 
-## Join the community
+```bash
+npm start
+```
 
-Join our community of developers creating universal apps.
+Ou para plataformas específicas:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+# iOS
+npm run ios
+
+# Android
+npm run android
+
+# Web
+npm run web
+```
+
+## 📁 Estrutura do Projeto
+
+```
+appZonaAzul/
+├── src/
+│   ├── constants/          # Constantes e configurações
+│   │   └── config.ts       # Configurações da API
+│   ├── contexts/           # React Contexts
+│   │   └── AuthContext.tsx # Contexto de autenticação
+│   ├── navigation/         # Configuração de navegação
+│   │   └── AppNavigator.tsx
+│   ├── screens/            # Telas da aplicação
+│   │   ├── LoginScreen.tsx
+│   │   ├── RegisterScreen.tsx
+│   │   └── HomeScreen.tsx
+│   ├── services/           # Serviços de API
+│   │   ├── api.ts          # Cliente Axios configurado
+│   │   └── auth.service.ts # Serviço de autenticação
+│   └── types/              # Tipos TypeScript
+│       └── api.ts          # Tipos da API
+├── App.tsx                 # Componente raiz
+└── package.json
+```
+
+## 🔐 Autenticação
+
+O app utiliza:
+- JWT tokens (access token + refresh token)
+- AsyncStorage para persistência de tokens
+- Interceptors do Axios para adicionar tokens automaticamente
+- Refresh token automático quando o access token expira
+
+## 🛠️ Tecnologias
+
+- **React Native** com **Expo**
+- **TypeScript**
+- **React Navigation** - Navegação entre telas
+- **React Query** - Gerenciamento de estado servidor
+- **Axios** - Cliente HTTP
+- **AsyncStorage** - Armazenamento local
+
+## 📱 Funcionalidades Implementadas (Sprint 3.1)
+
+- ✅ Tela de Login
+- ✅ Tela de Registro
+- ✅ Tela Home (básica)
+- ✅ Autenticação completa (login, registro, logout)
+- ✅ Persistência de sessão
+- ✅ Refresh token automático
+
+## 🔄 Próximas Sprints
+
+- Sprint 3.2: Gerenciamento de Veículos
+- Sprint 3.3: Sistema de Créditos
+- Sprint 3.4: Estacionamentos - Parte 1
+- Sprint 3.5: Estacionamentos - Parte 2
+- Sprint 3.6: Notificações e Polimento
+
+## 📝 Notas
+
+- O projeto está configurado para usar React Navigation Stack, não Expo Router (que vem por padrão)
+- Certifique-se de que o backend está rodando antes de iniciar o app
+- Para desenvolvimento, ajuste a URL da API no arquivo de configuração
