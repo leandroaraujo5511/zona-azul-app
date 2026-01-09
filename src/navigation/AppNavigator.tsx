@@ -20,17 +20,27 @@ import CreditHistoryScreen from '../screens/CreditHistoryScreen';
 import RechargeScreen from '../screens/RechargeScreen';
 import PIXPaymentScreen from '../screens/PIXPaymentScreen';
 
+// Fiscal Navigator
+import FiscalNavigator from './FiscalNavigator';
+
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-  const { isLoading, isAuthenticated } = useAuth();
-
+  const { isLoading, isAuthenticated, user } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen />;
   }
 
-  const initialRouteName = isAuthenticated ? 'Home' : 'Login';
+  // Determine initial route based on authentication and role
+  let initialRouteName = 'Login';
+  if (isAuthenticated) {
+    if (user?.role === 'fiscal') {
+      initialRouteName = 'FiscalNavigator';
+    } else {
+      initialRouteName = 'Home';
+    }
+  }
 
   return (
     <NavigationContainer>
@@ -40,6 +50,11 @@ export default function AppNavigator() {
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
+        
+        {/* Fiscal Navigation */}
+        <Stack.Screen name="FiscalNavigator" component={FiscalNavigator} />
+        
+        {/* Driver Navigation */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen 
           name="Vehicles" 

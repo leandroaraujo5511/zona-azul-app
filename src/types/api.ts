@@ -123,6 +123,17 @@ export interface Parking {
     plate: string;
     nickname?: string | null;
   };
+  payment?: {
+    id: string;
+    amount: number;
+    status: string;
+  };
+  location?: {
+    latitude?: number;
+    longitude?: number;
+    address?: string;
+  };
+  observations?: string;
 }
 
 export interface CreateParkingRequest {
@@ -192,3 +203,68 @@ export interface Payment {
   providerTransactionId?: string | null;
 }
 
+// Notification types
+export type NotificationStatus =
+  | 'pending'
+  | 'recognized'
+  | 'paid'
+  | 'expired'
+  | 'converted'
+  | 'cancelled';
+
+export interface NotificationLocation {
+  latitude?: number;
+  longitude?: number;
+  address?: string;
+}
+
+export interface Notification {
+  id: string;
+  notificationNumber: string;
+  plate: string;
+  status: NotificationStatus;
+  amount: number;
+  expiresAt: string;
+  createdAt: string;
+  paidAt?: string;
+  convertedToFineAt?: string;
+  location?: NotificationLocation;
+  observations?: string;
+}
+
+export interface ParkingByPlateResponse {
+  found: boolean;
+  parking: Parking | null;
+  canCreateNotification: boolean;
+  reason: string | null;
+}
+
+// Accountability types
+export interface AccountabilityStats {
+  totalParkings: number;
+  totalCashParkings: number;
+  totalPixParkings: number;
+  totalBalanceParkings: number;
+  totalCashAmount: number;
+  totalPixAmount: number;
+  totalBalanceAmount: number;
+  totalAmount: number;
+}
+
+export interface CashParkingNotSettled extends Parking {
+  payment: {
+    id: string;
+    amount: number;
+    status: string;
+  } | null;
+}
+
+export interface AccountabilityStatsResponse {
+  statistics: AccountabilityStats;
+  cashParkingsNotSettled: CashParkingNotSettled[];
+}
+
+export interface SettleParkingResponse {
+  parking: Parking;
+  message: string;
+}

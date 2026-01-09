@@ -124,6 +124,31 @@ class ParkingService {
       throw apiError;
     }
   }
+
+  /**
+   * Get parking by plate (Fiscal/Admin only)
+   */
+  async getParkingByPlate(plate: string): Promise<{
+    found: boolean;
+    parking: Parking | null;
+    canCreateNotification: boolean;
+    reason: string | null;
+  }> {
+    try {
+      const response = await api.get<{
+        found: boolean;
+        parking: Parking | null;
+        canCreateNotification: boolean;
+        reason: string | null;
+      }>(`/parkings/plate/${plate}`);
+      return response.data;
+    } catch (error: any) {
+      const apiError: ApiError = error.response?.data?.error || {
+        message: error.message || 'Erro ao buscar estacionamento por placa',
+      };
+      throw apiError;
+    }
+  }
 }
 
 export const parkingService = new ParkingService();

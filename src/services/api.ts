@@ -23,7 +23,7 @@ const refreshApi: AxiosInstance = axios.create({
 });
 
 // Routes that should not trigger token refresh
-const AUTH_ROUTES = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout'];
+const AUTH_ROUTES = ['/auth/login', '/auth/register', '/auth/refresh-token', '/auth/logout'];
 
 // Token refresh state management
 let isRefreshing = false;

@@ -115,7 +115,7 @@ class AuthService {
   async refreshToken(refreshToken: string): Promise<{ token: string; expiresIn: number }> {
     try {
       const response = await api.post<{ token: string; expiresIn: number }>(
-        '/auth/refresh',
+        '/auth/refresh-token',
         { refreshToken }
       );
       return response.data;

@@ -96,8 +96,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refreshToken);
 
       // Fetch full user data to match User type
+      let fullUser: User | null = null;
       try {
-        const fullUser = await authService.getCurrentUser();
+        fullUser = await authService.getCurrentUser();
         // If successful, store the full user data
         await AsyncStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(fullUser));
         setUser(fullUser);
@@ -118,6 +119,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         await AsyncStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(mappedUser));
         setUser(mappedUser);
+        fullUser = mappedUser;
+      }
+
+      // Validate user role - allow fiscal, driver, and admin roles
+      const userToValidate = fullUser || response.user;
+      if (
+        userToValidate.role !== 'fiscal' &&
+        userToValidate.role !== 'driver' &&
+        userToValidate.role !== 'admin'
+      ) {
+        // Clear tokens if role is not allowed
+        await AsyncStorage.multiRemove([
+          STORAGE_KEYS.TOKEN,
+          STORAGE_KEYS.REFRESH_TOKEN,
+          STORAGE_KEYS.USER,
+        ]);
+        setUser(null);
+        setIsLoading(false);
+        return {
+          success: false,
+          error: 'Você não tem permissão para acessar este aplicativo.',
+        };
       }
 
       setIsLoading(false);
